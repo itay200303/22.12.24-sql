@@ -1,0 +1,99 @@
+CREATE TABLE lecturers (
+    lecturer_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    UNIQUE(name)
+);
+
+CREATE TABLE Courses (
+    course_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    lecturer_id INTEGER,
+    UNIQUE(name),
+    FOREIGN KEY (lecturer_id) REFERENCES Lecturers(lecturer_id)
+);
+
+INSERT INTO Lecturers (name) VALUES ('John Smith');
+INSERT INTO Lecturers (name) VALUES ('Emily Johnson');
+INSERT INTO Lecturers (name) VALUES ('Michael Brown');
+INSERT INTO Lecturers (name) VALUES ('Sarah Davis');
+INSERT INTO Lecturers (name) VALUES ('David Wilson');
+INSERT INTO Lecturers (name) VALUES ('Jessica Taylor');
+INSERT INTO Lecturers (name) VALUES ('Daniel Moore');
+INSERT INTO Lecturers (name) VALUES ('Emma Anderson');
+INSERT INTO Lecturers (name) VALUES ('Chris Thomas');
+INSERT INTO Lecturers (name) VALUES ('Sophia Martinez');
+
+INSERT INTO courses (name, lecturer_id) VALUES ('Mathematics', 1);
+INSERT INTO courses (name, lecturer_id) VALUES ('Physics', 2);
+INSERT INTO courses (name, lecturer_id) VALUES ('Chemistry', 3);
+INSERT INTO courses (name, lecturer_id) VALUES ('Economics', 7);
+INSERT INTO courses (name, lecturer_id) VALUES ('Biology', 4);
+INSERT INTO courses (name, lecturer_id) VALUES ('Sociology', 10);
+INSERT INTO courses (name, lecturer_id) VALUES ('Art History', NULL);
+INSERT INTO courses (name, lecturer_id) VALUES ('Music Theory', NULL);
+INSERT INTO courses (name, lecturer_id) VALUES ('Philosophy', 8);
+INSERT INTO courses (name, lecturer_id) VALUES ('Environmental Studies', NULL);
+INSERT INTO courses (name, lecturer_id) VALUES ('Computer Science', 5);
+INSERT INTO courses (name, lecturer_id) VALUES ('Statistics', 6);
+INSERT INTO courses (name, lecturer_id) VALUES ('Psychology', 9);
+
+1. show all the courses that have lecturer and show the lecturer that teaches the course:
+SELECT lecturers.*, Courses.lecturer_id, Courses.name from lecturers
+INNER JOIN Courses ON lecturers.lecturer_id = Courses.lecturer_id
+
+7. Show all the lecturers who are not yet assigned to the course + the courses they don't have
+lecturer:
+SELECT l.name AS lecturer_name, c.name AS course_name
+FROM Lecturers l
+FULL OUTER JOIN Courses c ON l.lecturer_id = c.lecturer_id
+WHERE l.lecturer_id IS NULL OR c.lecturer_id IS NULL;
+
+8. print every lecturer that have the letter 'i' in there name:
+SELECT * FROM lecturers
+WHERE name like '%i%'
+
+9. count how many lecturers:
+SELECT count(*) from lecturers
+
+10. count how many Courses:
+SELECT count(*) from Courses
+
+11. make new column of weekly hours, put 4,6,8 for every course:
+ALTER TABLE Courses ADD COLUMN weekly_hours;
+UPDATE Courses SET weekly_hours = 4 WHERE course_id = 1;
+UPDATE Courses SET weekly_hours = 6 WHERE course_id = 2;
+UPDATE Courses SET weekly_hours = 8 WHERE course_id = 3;
+UPDATE Courses SET weekly_hours = 4 WHERE course_id = 4;
+UPDATE Courses SET weekly_hours = 6 WHERE course_id = 5;
+UPDATE Courses SET weekly_hours = 8 WHERE course_id = 6;
+UPDATE Courses SET weekly_hours = 4 WHERE course_id = 7;
+UPDATE Courses SET weekly_hours = 6 WHERE course_id = 8;
+UPDATE Courses SET weekly_hours = 8 WHERE course_id = 9;
+UPDATE Courses SET weekly_hours = 4 WHERE course_id = 10;
+UPDATE Courses SET weekly_hours = 6 WHERE course_id = 11;
+UPDATE Courses SET weekly_hours = 8 WHERE course_id = 12;
+UPDATE Courses SET weekly_hours = 4 WHERE course_id = 13;
+
+12. use group by to show how many courses have for 4,6,8 weekly hours:
+SELECT * FROM Courses;
+SELECT weekly_hours, count(weekly_hours) AS amount_of_hours
+FROM Courses
+GROUP BY weekly_hours
+
+13. show all lecturers that teaches 8 hours:
+SELECT l.name
+FROM Lecturers l
+JOIN Courses c ON l.lecturer_id = c.lecturer_id
+WHERE c.weekly_hours = 8;
+
+14. Delete all 4-hour weekly courses that do not have an embedded lecturer:
+DELETE FROM Courses
+WHERE weekly_hours = 4
+AND lecturer_id IS NULL;
+
+
+
+
+
+
+
